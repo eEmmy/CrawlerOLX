@@ -26,26 +26,6 @@ class CrawlerOLX
 	protected $outputFilename;
 
 	/**
-	 * Define o PATH do diretório de trabalho.
-	 *
-	 * @param String $path
-	 *
-	 * @return void
-	 */
-	public function setWorkingDirectory($path)
-	{
-		// Verifica se o diretório existe
-		if (is_dir($path)) {
-			// Define $this->path para o mesmo que $path
-			$this->path = $path;
-		}
-		else {
-			// Encerra a aplicação e exibe uma mensagem de erro
-			die('O path informado para o diretório de trabalho não existe.');
-		}
-	}
-
-	/**
 	 * Extrai dados de uma planilha.
 	 *
 	 * @param String $inputFile
@@ -55,7 +35,7 @@ class CrawlerOLX
 	public function readXLSX($inputFile)
 	{
 		// Pega os dados do arquivo
-		$file = SimpleXLSX::parse($this->path . $inputFile);
+		$file = SimpleXLSX::parse('input/' . $inputFile);
 		$file = $file->rows();	
 
 		// Array de dados
@@ -352,10 +332,7 @@ class CrawlerOLX
 		// Tenta gravar o arquivo
 		$writer = new XLSXWriter();
 		$writer->writeSheet($fileRows);
-		$writer->writeToFile((!empty($outputFolder) ? 
-			$this->path . $outputFolder . $this->outputFilename :
-			$this->path . $this->outputFilename
-		));
+		$writer->writeToFile('output/' . $this->outputFilename);
 
 		// Retorna true
 		return true;

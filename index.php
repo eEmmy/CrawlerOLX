@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Crawler OLX</title>
-</head>
-<body>
-
 <?php
 
 // Ativa a exibição de erros do PHP
@@ -21,10 +13,10 @@ require_once 'CrawlerOLX.php';
 $crawler = new CrawlerOLX();
 
 // Define o PATH padrão
-$crawler->setWorkingDirectory($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'Crawler' . DIRECTORY_SEPARATOR);
+// $crawler->setWorkingDirectory();
 
 // Extrai os parametros de busaca do arquivo de entrada
-$inputData = $crawler->readXLSX('input/input.xlsx');
+$inputData = $crawler->readXLSX('input.xlsx');
 
 // Loop em $inputData
 foreach ($inputData as $key => $search) {
@@ -36,10 +28,7 @@ foreach ($inputData as $key => $search) {
 	$writeRes = $crawler->generateOutputFile($dataReturned, 'output/');
 
 	// Exibe uma mensagem caso o arquivo seja gerado com sucesso
-	if ($writeRes) echo 'Arquivo gerado com sucesso!<br>';
+	if ($writeRes) echo "Arquivo gerado com sucesso!\n";
 }
 
 ?>
-
-</body>
-</html>
