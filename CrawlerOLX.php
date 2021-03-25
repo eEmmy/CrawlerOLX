@@ -26,6 +26,20 @@ class CrawlerOLX
 	protected $outputFilename;
 
 	/**
+	 * Guarda a quantidade de anuncios.
+	 *
+	 * @var String $outputFilename
+	 */
+	protected $adsAmount;
+
+	/**
+	 * Guarda a quantidade de paginas.
+	 *
+	 * @var String $outputFilename
+	 */
+	protected $pagesAmount;
+
+	/**
 	 * Extrai dados de uma planilha.
 	 *
 	 * @param String $inputFile
@@ -95,6 +109,9 @@ class CrawlerOLX
 
 		// Guarda a quantidade de anuncios retornada
 		$adsAmount = $ads->getElementsByTagName('li')->length;
+
+		// Define a quantidade de anuncios
+		$this->adsAmount = $adsAmount;
 
 		// Array de dados
 		$data = array();
@@ -258,9 +275,15 @@ class CrawlerOLX
 		for ($i=1; $i <= $pagesAmount; $i++) {
 			// Pega o conteudo da pagina atual
 			$pageContents = $this->getPageContents("https://www.olx.com.br/brasil?o={$i}&q={$searchString}");
-			
+
 			// Filtra os dados da página
 			$data[$i] = @$this->filterULdata($pageContents);
+			
+			if ($pagesAmount <= 10) $total = ($pagesAmount / 100) * ($i * 10000);
+			else if ($pagesAmount > 99) $total = ($pagesAmount / 100) * ($i * 1000);
+			// else $total = ($pagesAmount / 100) * $i;
+
+			echo "Progresso: " . $total . "%\n";
 		}
 
 		// Retorna os dados obtidos, paginados e ordenados
