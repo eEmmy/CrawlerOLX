@@ -148,6 +148,7 @@ class CrawlerOLX
 				// Evita anuncios promovendo outros anuncios
 				if ($data[$i]['price'] == 'DESTAQUE') {
 					unset($data[$i]);
+					$i--;
 					continue;
 				}
 
@@ -254,6 +255,8 @@ class CrawlerOLX
 			// Encerra a aplicação e exibe uma mensagem de erro
 			die('Os parametros necessários para extrair os dados não foram encontrados. Certifique-se de que existam os parametros "name" e "outputFilename" dentro do array de entrada.');
 		}
+
+		echo "Recuperando anuncios\n";
 		
 		$this->outputFilename = $inputData['outputFilename'];
 
@@ -278,13 +281,9 @@ class CrawlerOLX
 
 			// Filtra os dados da página
 			$data[$i] = @$this->filterULdata($pageContents);
-			
-			if ($pagesAmount <= 10) $total = ($pagesAmount / 100) * ($i * 10000);
-			else if ($pagesAmount > 99) $total = ($pagesAmount / 100) * ($i * 1000);
-			// else $total = ($pagesAmount / 100) * $i;
-
-			echo "Progresso: " . $total . "%\n";
 		}
+
+		echo "\nExtraindo dados\n";
 
 		// Retorna os dados obtidos, paginados e ordenados
 		return $data;
@@ -299,15 +298,27 @@ class CrawlerOLX
 	 */
 	public function getSellerName($data)
 	{
+		$totalItems = 0;
+		$percentage = 0;
+		$counter = 0;
+
+		// Loop para o contador
+		foreach ($data as $page => $items) {
+			foreach ($items as $item => $attr) {
+				$totalItems++;
+			}
+		}
+
+		// Define o enconding das strings
+		mb_internal_encoding("UTF-8");
+
 		// Loop em $data
 		foreach ($data as $page => $items) {
+
 			// Loop em $items
 			foreach ($items as $item => $attrs) {
-				// Pega o anuncio atual
+				$counter++;
 				$pageContents = $this->getPageContents($attrs['link']);
-
-				// Define o enconding das strings
-				mb_internal_encoding("UTF-8");
 
 				// Localiza e recorta o nome do vendedor
 				$target = mb_substr($pageContents, mb_strpos($pageContents, "sellerName")+13);
@@ -315,6 +326,8 @@ class CrawlerOLX
 
 				// Guarda o nome do vendedor nas informações do anuncio
 				$data[$page][$item]['sellerName'] = $target;
+
+				echo "{$counter}/{$totalItems}\n";
 			}
 		}
 
