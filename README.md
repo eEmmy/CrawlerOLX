@@ -32,7 +32,19 @@ Os caminhos de inclusão dos scripts abaico partem do prinicípio que todos os a
 ## Instalação
 Para instalar o CrawlerOLX, basta baixar ou clonar esse repositório e copiar os arquivos para alguma hospedagem.
 
-* Comando para o git: ```git clone https://github.com/eEmmy/CrawlerOLX```
+* **Microsoft Windows**:
+> 1. Instalar o [XAMPP](https://www.apachefriends.org/pt_br/download.html)
+> 2. Baixar esse repositório.
+
+* **Debian/Ubuntu linux based**:
+> 1. sudo apt-get install php -y
+> 2. sudo apt-get install git -y
+> 3. git clone https://github.com/eEmmy/CrawlerOLX.git
+
+* **Arch linux**:
+> 1. sudo pacman -S php
+> 2. sudo pacman -S git
+> 3. git clone https://github.com/eEmmy/CrawlerOLX.git
 
 ## Configurações
 Além dos caminhos de inclusão dos arquvos, existem també mais algumas configurações que podem ser alteradas conforme a necessidade do usuário na hora de implementar o crawler.
@@ -54,28 +66,9 @@ Vale ressaltar que mesmo que os parametros realmente usados sejam NOME_SITE e OU
 #### Processamento de dados
 A extração dos dados, consiste numa série de requisições HTTP, que podem ser divididas em duas partes.
 
-Primeiramente, ao iniciar a extração de dados, o script fará uma busca pelo produto dentro do site da OLX. Em seguida, calculará quantas páginas existem, para então começar a gravar os dados dentro do array de saída. Essa primeira parte retornará um array no seguinte formato:
+Primeiramente, ao iniciar a extração de dados, o script fará uma busca pelo produto dentro do site da OLX. Em seguida, calculará quantas páginas existem, para então começar a gravar os dados dentro do array de saída. Essa primeira parte retornará um array com a maioria dos dados dos anuncios.
 
-[Numero da página] => 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Posição do item na busca] =>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "link" => [Link do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "img" => [Link do imagem principal do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name" => [Titulo do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "price" => [Preço do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "city" => [Cidade em que o anúncio foi feito],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uf" => [Estado em que o anúncio foi feito]
-
-Na segunda parte do script, esse array será usado como parametro de busca (Nota: Na prática, apenas o link será usado, computando menos dados e consequentemente, diminuindo o tempo do processo). Então, será feita uma solicitação HTTP para cada anúncio, e dentro da página retornada, o crawler extrai o nome do anunciante. Será retornado então, o array de dados final:
-
-[Numero da página] => 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Posição do item na busca] =>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "link" => [Link do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "img" => [Link do imagem principal do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name" => [Titulo do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "price" => [Preço do anúncio],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "city" => [Cidade em que o anúncio foi feito],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uf" => [Estado em que o anúncio foi feito],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "sellerName" => [Nome do vendedor]
+Na segunda parte do script, esse array será usado como parametro de busca (Nota: Na prática, apenas o link será usado, computando menos dados e consequentemente, diminuindo o tempo do processo). Então, será feita uma solicitação HTTP para cada anúncio, e dentro da página retornada, o crawler extrai o nome do anunciante. Será retornado então, o array de dados final.
 
 O processo de extração de dados por busca é bem longo, tendo demorado cerca de 1 minuto para retornar resultados da busca por 16 itens.
 
@@ -88,9 +81,13 @@ Caso o robô caia no meio de uma solicitação, há duas linhas de ação a se s
 Como se trata de um script recursivo, independente de definir uma página inicial mais á frente da primeira, o tempo de execução do processo será o mesmo, por isso é recomendado que o script tenha permissões para sobrescrever os arquivos.
 
 ## Como implementar
-A implementação é bem simple, já que consiste em criar um formulário para envio de arquivos (planilha de entrada). Após o submit desse formulário, deverá ser gravado o caminho para o arquivo temporário e o nome do mesmo, para em seguida, defini-los como parametros para o Crawler.
+A implementação é bem simples, o uso do robo deve ser feito via terminal em ambos os sistemas:
 
-Dessa forma, para apresentar o resultado da(s) busca(s) para o usuário, seria apenas recuperar os arquivos gerados dentro do diretório temporário e disponibiliza-los de alguma forma em *client-side*, seja via download manual, automático, envio por email ou até mesmo apresenta-los online.
+* **Todos os sistemas**:
+> cd caminho/para/Crawler
+> php index.php
+
+(Nota: Em máquinas com Microsoft Windows, o prompt deve ser aberto pelo XAMPP. Para isso, abra como administrador o XAMPP Control Panel, em seguida clique em shell.)
 
 ## Dependências
 * [SimpleXLSX](https://github.com/shuchkin/simplexlsx) - Para ler dados de arquivos em formato XLSX.
